@@ -1,0 +1,18 @@
+﻿@model Mvc4_Development_Test.UploadDetails.UploadDetailsDTO
+
+@{
+    ViewBag.Title = "Success!";
+}
+
+@Html.ActionLink("Back to Event List", "EventIndex", "Event")<br /><br />
+
+
+<hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+</hgroup>
+
+
+@section Scripts 
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

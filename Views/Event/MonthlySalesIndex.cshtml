@@ -1,0 +1,87 @@
+﻿@model Mvc4_Development_Test.Event.MonthlySalesDTO
+
+@{
+    ViewBag.Title = Model.MonthList.Where(m => m.Month_ID == Model.Month_ID).ToList().FirstOrDefault().Month_Name + " Sales";
+    SelectList monthsDDL = new SelectList(Model.MonthList, "Month_ID", "Month_Name");
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+</hgroup>
+@using (Html.BeginForm("MonthlySalesIndex", "Event", FormMethod.Post, new { id = "monthlysalesindexsearchform" }))
+{
+
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div>
+        <p>
+            @Html.DropDownList("month", monthsDDL, new { @class = "form-control" })
+            <input type="submit" value="Submit" class="btn btn-primary" />
+        </p>
+    </div>
+
+}
+
+@using (Html.BeginForm("MonthlySalesIndex", "Event", FormMethod.Post, new { id = "monthlysalesindexform" }))
+{
+    if (Model.MonthlySalesList.Any())
+    {
+        var _headers = Model.MonthlySalesList.FirstOrDefault();
+        <table>
+            <tr>
+                <th>@Html.DisplayNameFor(m => _headers.Event_Name)</th>
+                <th>@Html.DisplayNameFor(m => _headers.Customer_Count)</th>
+            </tr>
+
+            @* Display a table of counts per month *@
+            @for (int i = 0; i < Model.MonthlySalesList.Count(); i++)
+            {
+                <tr>
+                    <td>@Model.MonthlySalesList[i].Event_Name</td>
+                    <td>
+                        @*@Model.MonthlySalesList[i].Customer_Count*@
+                        @Html.ActionLink(Model.MonthlySalesList[i].Customer_Count.ToString(), "MonthlySalesIndex", new { month = Model.Month_ID, event_ID = Model.MonthlySalesList[i].Event_ID })
+                    </td>
+                </tr>
+            }
+        </table>
+        <br/>
+        if (Model.CustomerList.Any() && Model.Event_ID != null)
+        {
+            var cust_headers = Model.CustomerList.FirstOrDefault();
+            <table>
+                <tr>
+                    <th>@Html.DisplayNameFor(m => cust_headers.Customer_Name)</th>
+                    <th>@Html.DisplayNameFor(m => cust_headers.Customer_RegDateT)</th>
+                </tr>
+
+                @* Display a table of counts per month *@
+                @for (int i = 0; i < Model.CustomerList.Count(); i++)
+                {
+                    <tr>
+                        <td>@Model.CustomerList[i].Customer_Name</td>
+                        <td>@Html.ValueFor(m => m.CustomerList[i].Customer_RegDateT, "{0:dd/MM/yyyy}")</td>
+                    </tr>
+                }
+            </table>
+        }
+        else if(Model.Event_ID != null)
+        {
+            <h4>There were no customers signed up from this sales event.</h4>
+        }
+
+
+    }
+    else
+    {
+            <h4>There were no sales events this month.</h4>
+    }
+
+
+}
+
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

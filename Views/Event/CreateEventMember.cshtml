@@ -1,0 +1,52 @@
+﻿@model Mvc4_Development_Test.Event.CreateEventDTO
+
+@{
+    ViewBag.Title = "Create Event";
+}
+
+@Html.ActionLink("Back to Event List", "EventIndex")<br /><br />
+
+
+<hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+</hgroup>
+
+@using (Html.BeginForm("CreateEventMember", "Event", FormMethod.Post, new { id = "createeventmemberform" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+<fieldset>
+    <div class="editor-label">
+        @Html.LabelFor(model => model.EventMember.Event_Name)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.EventMember.Event_Name)
+        @Html.ValidationMessageFor(model => model.EventMember.Event_Name)
+    </div>
+    <div class="editor-label">
+        <h5>@Html.LabelFor(model => model.EventMember.Region_ID)</h5>
+    </div>
+    <div class="editor-field">
+        @Html.DropDownListFor(model => model.EventMember.Region_ID, new SelectList(Model.RegionList, "Region_ID", "Region_Name", Model.EventMember.Region_ID))
+        @Html.ValidationMessageFor(model => model.EventMember.Region_ID)
+    </div>
+    <div class="editor-label">
+        <h5>@Html.LabelFor(model => model.EventMember.Event_DateT)</h5>
+    </div>
+    <div class="editor-field">
+        @Html.DropDownListFor(model => model.EventMember.Day, Enumerable.Range(1, 31).Select(i => new SelectListItem { Value = i.ToString(), Text = i.ToString() }), "Day")
+        @Html.DropDownListFor(model => model.EventMember.Month, Enumerable.Range(1, 12).Select(i => new SelectListItem { Value = i.ToString(), Text = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.GetMonthName(i) }), "Month")
+        @Html.DropDownListFor(model => model.EventMember.Year, Enumerable.Range(2019, 114).Select(i => new SelectListItem { Value = i.ToString(), Text = i.ToString() }), "Year")
+        @Html.ValidationMessageFor(model => model.EventMember.Event_DateT)
+    </div>
+    <p>
+        <input type="submit" value="Create" />
+    </p>
+</fieldset>
+}
+
+@section Scripts 
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

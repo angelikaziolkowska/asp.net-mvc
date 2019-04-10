@@ -1,0 +1,39 @@
+﻿@model Mvc4_Development_Test.Event.CustomerSalesDTO
+
+@{
+    ViewBag.Title = "Customer Sales";
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+</hgroup>
+
+@using (Html.BeginForm("CustomerSalesIndex", "Event", FormMethod.Post, new { id = "customersalesindexform" }))
+{
+    var _headers = Model.CustomerSalesList.FirstOrDefault();
+    <table>
+        <tr>
+            <th>@Html.DisplayNameFor(m => _headers.Month_Name)</th>
+            <th>@Html.DisplayNameFor(m => _headers.Event_Count)</th>
+            <th>@Html.DisplayNameFor(m => _headers.Customer_Count)</th>
+        </tr>
+
+        @* Display a table of counts per month *@
+        @for (int i = 0; i < Model.CustomerSalesList.Count(); i++)
+        {        
+            <tr>
+                <td>@Model.CustomerSalesList[i].Month_Name</td>
+                <td>
+                    @*@Model.CustomerSalesList[i].Event_Count*@
+                    @Html.ActionLink(Model.CustomerSalesList[i].Event_Count.ToString(), "MonthlySalesIndex", new { month = Model.CustomerSalesList[i].Month_ID })
+                </td>
+                <td>@Model.CustomerSalesList[i].Customer_Count</td>
+            </tr>
+         }
+    </table>
+}
+
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

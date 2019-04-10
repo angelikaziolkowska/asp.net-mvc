@@ -1,0 +1,54 @@
+﻿@model Mvc4_Development_Test.UploadDetails.UploadDetailsDTO
+
+@{
+    ViewBag.Title = "Upload Customers";
+}
+
+@Html.ActionLink("Back to Event List", "EventIndex")<br /><br />
+
+
+<hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+</hgroup>
+
+@using (Html.BeginForm("UploadDetailsMember", "UploadDetails", FormMethod.Post, new { id = "uploaddetailsform", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+<fieldset>
+    @*choose an event*@
+    <div class="editor-label">
+        @Html.LabelFor(model => model.UploadDetailsMember.Event_ID)
+    </div>
+    <div class="editor-field">
+        @Html.DropDownListFor(model => model.UploadDetailsMember.Event_ID, new SelectList(Model.EventList, "Event_ID", "Event_Name", Model.UploadDetailsMember.Event_ID))
+        @Html.ValidationMessageFor(model => model.UploadDetailsMember.Event_ID)
+    </div><br />    
+
+    @*upload a spreadsheet*@
+    <div class="editor-label">
+        @Html.LabelFor(model => model.UploadDetailsMember.File)
+    </div>
+    <div class="editor-field">
+        @Html.TextBoxFor(m => m.UploadDetailsMember.File, new { type = "file" })
+        @Html.ValidationMessageFor(m => m.UploadDetailsMember.File)
+        @Html.HiddenFor(m=> m.UploadDetailsMember.Temp_Table_ID)
+    </div><br />
+    @*example of spreadsheet*@
+    <div class="editor-label">
+        @Html.Label("Spreadsheet Example")
+    </div>
+    <div class="editor-field">
+        <img src="~/Content/Images/CustomerUpload.png" alt="Customer Upload Example">
+    </div>
+    <p>
+        <input type="submit" value="Upload" />
+    </p>
+</fieldset>
+}
+
+@section Scripts 
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

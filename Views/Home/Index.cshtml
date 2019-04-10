@@ -1,0 +1,57 @@
+﻿@model HomeDTO
+
+@{
+    ViewBag.Title = "Staff";
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+</hgroup>
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Post, new { id = "indexform" }))
+{
+<div>
+    @Html.ActionLink("Create Staff Member", "CreateStaffMember")
+</div>
+
+    <table>
+        <tr>
+            <th>
+                @*@Html.DisplayNameFor(m => m.StaffList.First().Staff_ID)*@
+                        @Html.ActionLink("ID", "Index",
+                    new { sortOrder = "Staff_ID", CurrentSort = ViewBag.CurrentSort })
+                    </th>
+            <th>
+                @*@Html.DisplayNameFor(m => m.StaffList.First().Staff_Name)*@
+                        @Html.ActionLink("Name", "Index",
+                            new { sortOrder = "Staff_Name", CurrentSort = ViewBag.CurrentSort })
+
+                    </th>
+            <th>
+                @*@Html.DisplayNameFor(m => m.StaffList.First().Status_ID)*@
+                        @Html.ActionLink("Status", "Index",
+                            new { sortOrder = "Status_ID", CurrentSort = ViewBag.CurrentSort })
+                    </th>
+            <th>Actions</th>
+        </tr>
+        @* Display a table of users *@
+        @for (int i = 0; i < Model.StaffList.Count(); i++)
+        {
+            <tr>
+                <td>@Model.StaffList[i].Staff_ID</td>
+                <td>@Model.StaffList[i].Staff_Name</td>
+                <td>@Model.StaffList[i].Status_ID.ToString()</td>               
+                <td>
+                    @*@Html.HiddenFor(m => m.StaffList[i].Department_ID)
+                    @Html.HiddenFor(m => m.StaffList[i].Staff_RegDateT)*@
+                    @Html.ActionLink("Details", "StaffDetails", new { id = Model.StaffList[i].Staff_ID } )
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

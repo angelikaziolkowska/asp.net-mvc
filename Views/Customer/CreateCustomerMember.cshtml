@@ -1,0 +1,96 @@
+﻿@model Mvc4_Development_Test.Customer.CreateCustomerDTO
+
+
+@{
+    ViewBag.Title = "Create Customer";
+    SelectList titlesDDL = new SelectList(Model.TitleList.Select(p => p.Title_Desc).ToList(), Model.CustomerMember.Title_Desc);
+    SelectList servicesDDL = new SelectList(Model.ServiceList.Select(p => p.Service_Name).ToList());
+    SelectList staffDDL = new SelectList(Model.StaffList, "Staff_ID", "Staff_Name");
+
+}
+
+@Html.ActionLink("Back to Customer List", "CustomerIndex")<br /><br />
+
+
+<hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+</hgroup>
+
+@using (Html.BeginForm("CreateCustomerMember", "Customer", FormMethod.Post, new { id = "createcustomermemberform" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+<fieldset>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.TitleMember.Title_ID)
+    </div>
+
+    <div class="editor-field">
+        @Html.DropDownListFor(model => Model.CustomerMember.Title_ID, titlesDDL, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.CustomerMember.Title_ID)
+    </div>
+
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.CustomerMember.Customer_Name)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.CustomerMember.Customer_Name)
+        @Html.ValidationMessageFor(model => model.CustomerMember.Customer_Name)
+    </div>
+
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.CustomerMember.Customer_School)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.CustomerMember.Customer_School)
+        @Html.ValidationMessageFor(model => model.CustomerMember.Customer_School)
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.CustomerMember.Customer_Email)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.CustomerMember.Customer_Email)
+        @Html.ValidationMessageFor(model => model.CustomerMember.Customer_Email)
+    </div>
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.ServiceMember)
+    </div>
+    <div class="editor-field">
+
+        @for (int i = 0; i < Model.ServiceList.Count(); i++)
+        {
+
+            @Html.LabelFor(m => m.ServiceList[i].Service_ID, Model.ServiceList[i].Service_Name)
+            @Html.CheckBoxFor(m => m.ServiceList[i].IsChecked)
+            @Html.HiddenFor(m => m.ServiceList[i].IsChecked)
+            @Html.HiddenFor(m => m.ServiceList[i].Service_Name)
+            @Html.HiddenFor(m => m.ServiceList[i].Service_ID)
+        }
+    </div>
+    <div class="editor-label">
+        @Html.LabelFor(model => model.CustomerMember.Staff_ID)
+    </div>
+    <div class="editor-field">
+        @Html.DropDownListFor(model => Model.CustomerMember.Staff_ID, staffDDL, new { @class = "form-control" })
+        @Html.HiddenFor(m => m.CustomerMember.Staff_ID)
+        @Html.HiddenFor(m => m.CustomerMember.Staff_Name)
+        @Html.ValidationMessageFor(model => model.CustomerMember.Staff_Name)
+
+    </div>
+    <p>
+        <input type="submit" value="Create" />
+    </p>
+</fieldset>
+}
+
+@section Scripts 
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

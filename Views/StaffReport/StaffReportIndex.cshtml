@@ -1,0 +1,88 @@
+﻿@model StaffReportDTO
+@using Mvc4_Development_Test.StaffReport
+
+@{
+    ViewBag.Title = "Staff Report";
+    SelectList filtersDDL = new SelectList(Model.StaffFilterList, "StaffFilter_ID", "StaffFilter_Name");
+    SelectList departmentsDDL = new SelectList(Model.DepartmentList.Where(m => m.Department_ID > 0), "Department_ID", "Department_Name");
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+</hgroup>
+
+
+@using (Html.BeginForm("StaffReportIndex", "StaffReport", FormMethod.Get, new { id = "staffreportindexsearchform" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div>
+        <p>
+            @Html.DropDownList("SearchFilter", filtersDDL, "All Filters", new { @class = "form-control" })
+            @Html.DropDownList("SearchDepartment", departmentsDDL, "All Departments", new { @class = "form-control" })
+            <input type="submit" value="Search" class="btn btn-primary" />
+        </p>
+    </div>
+}
+
+@using (Html.BeginForm("StaffReportIndex", "StaffReport", FormMethod.Post, new { id = "staffreportindexform" }))
+{
+    <table>
+        <tr>
+            <th>@Html.DisplayNameFor(m => m.StaffReportList.FirstOrDefault().Staff_Name)</th>
+            <th>@Html.DisplayNameFor(m => m.StaffReportList.FirstOrDefault().Department)</th>
+            <th>@Html.DisplayNameFor(m => m.StaffReportList.FirstOrDefault().Registered)</th>
+            <th>@Html.DisplayNameFor(m => m.StaffReportList.FirstOrDefault().Status)</th>
+            <th>@Html.DisplayNameFor(m => m.StaffReportList.FirstOrDefault().Customer_Count)</th>
+        </tr>
+
+        @* Display a table of users *@
+        @for (int i = 0; i < Model.StaffReportList.Count(); i++)
+        {
+        <tr>           
+            <td>
+                @if (i == (Model.StaffReportList.Count() - 1) && !Model.SearchFilter.HasValue )
+                {
+                    <b>Total</b>
+                }
+                else if(Model.SearchFilter.HasValue && Model.StaffReportList[i].Staff_ID == 999)
+                {
+                    <b>@Model.StaffReportList[i].Staff_Name</b>
+                }
+                else
+                {
+                    @Model.StaffReportList[i].Staff_Name
+                    if (Model.StaffReportList[i].Staff_ID != 999)
+                    {
+                        @String.Concat(" (", Model.StaffReportList[i].Staff_ID.ToString(), ")")
+                    }
+                }
+            </td>            
+            <td>
+                @if (Model.SearchFilter.HasValue && Model.StaffReportList[i].Staff_ID == 999)
+                {
+                    <b>Total</b>
+                }
+                @Model.StaffReportList[i].Department
+            </td>    
+            <td>@Html.ValueFor(m => m.StaffReportList[i].Registered, "{0:dd/MM/yyyy}")</td>    
+            <td>@Model.StaffReportList[i].Status</td>    
+            <td>@if (Model.StaffReportList[i].Staff_ID == 999)
+                {
+                    <b>@Model.StaffReportList[i].Customer_Count.ToString()</b>
+                }
+                else
+                {
+                    @Model.StaffReportList[i].Customer_Count.ToString()
+                }
+            </td>    
+        </tr>
+        }
+    </table>           
+}
+
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

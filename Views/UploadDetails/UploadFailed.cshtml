@@ -1,0 +1,18 @@
+﻿@model Mvc4_Development_Test.UploadDetails.UploadDetailsDTO
+
+@{
+    ViewBag.Title = "Upload Failed!";
+}
+
+@Html.ActionLink("Back to upload", "UploadDetailsMember")<br /><br />
+
+@*Add error message*@
+<hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+</hgroup>
+
+
+@section Scripts 
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

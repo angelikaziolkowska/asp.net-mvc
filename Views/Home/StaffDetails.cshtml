@@ -1,0 +1,60 @@
+﻿@model StaffDetailsDTO
+
+@{
+    ViewBag.Title = "Staff Details";
+    ViewBag.OverviewTitle = "Staff Overview";
+    ViewBag.FiltersTitle = "Staff Filters";
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+</hgroup>
+
+@using (Html.BeginForm("StaffDetails", "Home", FormMethod.Get, new { id = "staffdetailsform" }))
+{
+    <br />
+    <div class="section" id="StaffOverview">
+        <h3>@ViewBag.OverviewTitle</h3>
+        <table>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.StaffMember.Staff_ID)</th>
+                <td>@Model.StaffMember.Staff_ID</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.StaffMember.Staff_Name)</th>
+                <td>@Model.StaffMember.Staff_Name</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.StaffMember.Department_ID)</th>
+                <td>@Model.StaffMember.Department_Name</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.StaffMember.Staff_RegDateT)</th>
+                <td>@Html.ValueFor(m => m.StaffMember.Staff_RegDateT, "{0:dd/MM/yyyy}")</td>
+            </tr>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.StaffMember.Status_ID)</th>
+                <td>@Model.StaffMember.Status_ID.ToString()</td>
+            </tr>
+        </table>
+    </div>
+    <br />
+    
+    <div class="section" id="StaffFilters">
+        <h3>@ViewBag.FiltersTitle</h3>
+        <table>
+            @for (int i = 0; i < Model.StaffFilterDetailList.Count(); i++)
+            {
+                <tr>
+                    <th>@Html.ValueFor(m => m.StaffFilterDetailList[i].StaffFilter_Name)</th>
+                    <td>@Html.ValueFor(m => m.StaffFilterDetailList[i].StaffFilterVal_Name)</td>
+                </tr>
+            }
+        </table>
+    </div>
+}
+
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

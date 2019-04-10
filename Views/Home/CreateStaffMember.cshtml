@@ -1,0 +1,56 @@
+﻿@model Mvc4_Development_Test.Home.CreateStaffDTO
+
+@{
+    ViewBag.Title = "Create Staff Member";
+}
+
+@Html.ActionLink("Back to Staff List", "Index")<br /><br />
+
+
+<hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+</hgroup>
+
+@using (Html.BeginForm("CreateStaffMember", "Home", FormMethod.Post, new { id = "createstaffmemberform" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+<fieldset>
+    <div class="editor-label">
+        @Html.LabelFor(model => model.StaffMember.Staff_Name)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.StaffMember.Staff_Name)
+        @Html.ValidationMessageFor(model => model.StaffMember.Staff_Name)
+    </div>
+
+    @*choose department*@
+    <div class="editor-label">
+        <h5>@Html.LabelFor(model => model.StaffMember.Department_ID)</h5>
+    </div>
+    <div class="editor-field">
+        @Html.DropDownListFor(model => model.StaffMember.Department_ID, new SelectList(Model.DepartmentList, "Department_ID", "Department_Name", Model.StaffMember.Department_ID))
+        @Html.ValidationMessageFor(model => model.StaffMember.Department_ID)
+    </div>
+
+    @for (int i = 0; i < Model.StaffFilterList.Count(); i++)
+    {
+        <div class="editor-label">
+            <h3>@Html.ValueFor(m => m.StaffFilterList[i].StaffFilter_Name)</h3>
+        </div>
+        <div class="editor-field">
+            @Html.DropDownListFor(model => model.StaffMember.StaffFilterVal_ID[i], new SelectList(Model.StaffFilterValList.Where(m => m.StaffFilter_ID == Model.StaffFilterList[i].StaffFilter_ID), "StaffFilterVal_ID", "StaffFilterVal_Name", Model.StaffMember.StaffFilterVal_ID))
+            @Html.ValidationMessageFor(model => model.StaffFilterValMember.StaffFilterVal_ID)
+        </div>
+    }
+    <p>
+        <input type="submit" value="Create" />
+    </p>
+</fieldset>
+}
+
+@section Scripts 
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

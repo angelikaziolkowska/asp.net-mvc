@@ -1,0 +1,55 @@
+﻿@model Mvc4_Development_Test.Event.EventDTO
+
+@{
+    ViewBag.Title = "Events";
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+</hgroup>
+
+@using (Html.BeginForm("EventIndex", "Event", FormMethod.Post, new { id = "eventindexform" }))
+{
+<div>
+    @Html.ActionLink("Create Event", "CreateEventMember")
+    @Html.ActionLink("Upload Customers", "UploadDetailsMember", "UploadDetails")
+    @Html.ActionLink("Customer Sales", "CustomerSalesIndex", "Event")
+    
+</div>
+
+    <table>
+        <tr>
+            <th>
+                @Html.ActionLink("ID", "EventIndex",
+            new { sortOrder = "Event_ID", CurrentSort = ViewBag.CurrentSort })
+            </th>
+            <th>
+                @Html.ActionLink("Name", "EventIndex",
+                    new { sortOrder = "Event_Name", CurrentSort = ViewBag.CurrentSort })
+            </th>
+            <th>
+                @Html.ActionLink("Region", "EventIndex",
+                    new { sortOrder = "Region_ID", CurrentSort = ViewBag.CurrentSort })
+            </th>
+            <th>
+                @Html.ActionLink("Date", "EventIndex",
+                      new { sortOrder = "Event_DateT", CurrentSort = ViewBag.CurrentSort })
+            </th>
+        </tr>
+        @* Display a table of events *@
+        @for (int i = 0; i < Model.EventList.Count(); i++)
+        {
+            <tr>
+                <td>@Model.EventList[i].Event_ID</td>
+                <td>@Model.EventList[i].Event_Name</td>
+                <td>@Model.EventList[i].Region_Name</td>
+                <td>@Html.ValueFor(m => m.EventList[i].Event_DateT, "{0:dd/MM/yyyy}")</td>
+            </tr>
+        }
+    </table>
+}
+
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

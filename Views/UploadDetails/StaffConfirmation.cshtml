@@ -1,0 +1,118 @@
+﻿@model Mvc4_Development_Test.Customer.CustomerDTO
+@using Mvc4_Development_Test.Customer
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    ViewBag.Title = "Staff Confirmation";
+    ViewBag.CustomerDoesNotExist = "Staff ID does not match any existing staff member, choose one of the following";
+    SelectList staffDDL = new SelectList(Model.StaffList.Where(s=> s.Status_ID.Equals(Status.Active)), "Staff_ID", "Staff_Name");
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title</h1>
+</hgroup>
+
+
+@using (Html.BeginForm("StaffConfirmation", "UploadDetails", FormMethod.Post, new { id = "staffconfirmationform" }))
+{
+    
+    <table>
+        @*@foreach (var item in Model)
+        {*@
+            <tr>
+                <th>@Html.DisplayNameFor(m => Model.CustomerList.FirstOrDefault().Customer_ID)</th>
+                <th>@Html.DisplayNameFor(m => Model.CustomerList.FirstOrDefault().Title_Desc)</th>
+                <th>@Html.DisplayNameFor(m => Model.CustomerList.FirstOrDefault().Customer_Name)</th>
+                <th>@Html.DisplayNameFor(m => Model.CustomerList.FirstOrDefault().Customer_School)</th>
+                <th>@Html.DisplayNameFor(m => Model.CustomerList.FirstOrDefault().Customer_Email)</th>
+                <th>@Html.DisplayNameFor(m => Model.CustomerList.FirstOrDefault().CustomerServiceList)</th>
+                <th>@Html.DisplayNameFor(m => Model.CustomerList.FirstOrDefault().Staff_ID)</th>
+                <th>Actions</th>
+            </tr>
+
+            @* Display a table of users *@
+
+            @for (int i = 0; i < Model.CustomerList.Count(); i++)
+            {
+                if (ViewBag.Page != ViewBag.MaxPage && i >= 10)
+                {
+                    break;
+                }
+
+                if (Model.CustomerList[i].Status_ID == Status.Active || Model.CustomerList[i].Status_ID == Status.Blocked)
+                {
+                    @Html.HiddenFor(m => Model.CustomerList[i].Customer_ID)
+                    <tr>
+
+                        <td>@Model.CustomerList[i].Customer_ID</td>
+                        <td>@Model.CustomerList[i].Title_Desc</td>
+                        <td>@Model.CustomerList[i].Customer_Name</td>
+                        <td>@Model.CustomerList[i].Customer_School</td>
+                        <td>@Model.CustomerList[i].Customer_Email</td>
+                        <td>
+                            <ul>
+                                @for (int j = 0; j < Model.CustomerServiceList.Count(); j++)
+                                {
+                                    if (Model.CustomerList[i].Customer_ID == Model.CustomerServiceList[j].Customer_ID)
+                                    {
+                                        <li>
+                                            @Enum.GetName(typeof(Service), Model.CustomerServiceList[j].Service_ID)
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </td>                       
+                        <td>
+                            @{var num = Model.StaffList.Where(z => z.Staff_ID == Model.CustomerList[i].Staff_ID).FirstOrDefault();
+                            }
+                            @if (num != null)
+                            {
+
+                                @num.Staff_Name
+                                @Html.HiddenFor(m => m.CustomerList[i].Staff_ID)
+
+                            }
+                            else
+                            {
+                                @ViewBag.CustomerDoesNotExist
+                                <div class="editor-field">
+                                    @Html.DropDownListFor(model => Model.CustomerList[i].Staff_ID, staffDDL, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => Model.CustomerList[i].Staff_ID)
+                                </div>
+                            }
+                        </td>
+                        <td>
+                            @if (Model.StaffList.Where(z => z.Staff_ID == Model.CustomerList[i].Staff_ID).ToList().Count() == 0)
+                            {
+                                @Html.ActionLink("Delete Customer", "Delete", Model.CustomerList[i])
+                            }
+                        </td>
+                        </tr>
+                    }
+
+                }                        
+</table>
+        
+        <br />
+        <div id='Paging' style="text-align: center">
+            Page @(Model.CustomerList.PageCount < Model.CustomerList.PageNumber ? 1 : Model.CustomerList.PageNumber)
+            of @Model.CustomerList.PageCount
+
+            
+            @Html.PagedListPager(Model.CustomerList, page => Url.Action("StaffConfirmation", new { page }))
+        </div>
+
+        <p>
+            @Html.Hidden("page", Model.CustomerList.PageNumber)
+            <input type="submit" value="Confirm" class="btn btn-default" />
+
+            @Html.ActionLink("Delete Upload File", "DeleteFile", null, new { @class="classname" })
+        </p>     
+        
+}
+
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}
